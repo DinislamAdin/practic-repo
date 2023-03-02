@@ -64,7 +64,7 @@ const showAllNews = (data, category_name) => {
                     <i class= "fas fa-star"></i>
                  </div>
                  <div>
-                    <i class= "fas fa-arrow-right" onclick="showNewsDetails('${_id}')"></i>
+                    <i class= "fas fa-arrow-right" onclick="fetchNewsDetails('${_id}')" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
                  </div>
             </div>
           </div>
@@ -75,7 +75,47 @@ const showAllNews = (data, category_name) => {
     })
 }
 
-const showNewsDetails = news_id =>{
+const fetchNewsDetails = news_id =>{
     const url = `https://openapi.programming-hero.com/api/news/${news_id}`
-    console.log(url);
+    // console.log(url);
+    fetch(url)
+   .then(res => res.json())
+   .then(data => showNewsDetails(data.data[0]))
+}
+
+const showNewsDetails = newsDetails =>{
+    // console.log(newsDetails);
+  
+    const { image_url, title, details, author,total_view} = newsDetails;
+   
+     document.getElementById('modal-body').innerHTML = `
+     <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-12 d-flex flex-column">
+        <img src="${image_url}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-12">
+        <div class="card-body">
+          <h5 class="card-title">${title}</h5>
+          <p class="card-text">${details}
+          </p>
+        </div>
+        <div class="card-footer border-0 bg-body d-flex justify-content-between">
+             <div class="d-flex gap-2">
+                <img src="${author.img}" class="img-fluid rounded-circle" alt="..." height="40px" width="40px">
+               <div>
+                 <p class="m-0 p-0">${author.name}</p>
+                <p class="m-0 p-0">${author.published_date}</p>
+               </div class="d-flex align-items-center">
+                <i class= "fas fa-eye"></i>
+                <p class="m-0 p-0">${total_view}</p>
+            </div>
+            <div>
+                <i class= "fas fa-star"></i>
+             </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    `
 }
